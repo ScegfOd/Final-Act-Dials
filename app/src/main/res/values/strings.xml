@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Final Act Dials</string>
+    <string name="d2b">2B</string>
+    <string name="d2">2</string>
+    <string name="d2a">2A</string>
+    <string name="dc">C</string>
+    <string name="d1b">1B</string>
+    <string name="d1">1</string>
+    <string name="d1a">1A</string>
+    <string name="label_error">xD</string>
+    <string name="dials_hint">Touch the edges of the dials to move them.</string>
+    <string name="unlocked">Tap this to lock dials (Ready to fire)</string>
+    <string name="locked">Tap this to unlock dials (Movement and firing complete)</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="green">Green</string>
+    <string name="red">Red</string>
+</resources>
