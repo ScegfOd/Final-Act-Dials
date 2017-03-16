@@ -14,6 +14,15 @@ public class Menu extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
     }
 
+    @Override
+    public void onPostResume(){
+        super.onPostResume();
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
     public void green(View view){
         Intent intent = new Intent(this, UsableDials.class);
         intent.putExtra("COLOR", ContextCompat.getColor(this, R.color.colorGreen));
@@ -21,7 +30,7 @@ public class Menu extends AppCompatActivity {
     }
     public void red(View view){
         Intent intent = new Intent(this, UsableDials.class);
-        intent.putExtra("COLOR", ContextCompat.getColor(this, R.color.colorRed));
+        intent.putExtra("COLOR", ContextCompat.getColor(this, R.color.colorOrange));
         startActivity(intent);
     }
 }

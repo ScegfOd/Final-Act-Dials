@@ -1,11 +1,17 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">8dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="upper_button_size">40dp</dimen>
-    <dimen name="upper_dial_size">120dp</dimen> <!--must be 3x the button size-->
-    <dimen name="lower_button_size">28dp</dimen>
-    <dimen name="lower_dial_size">84dp</dimen>
-    <dimen name="fab_margin">16dp</dimen> <!--must be 3x the button size-->
+    <dimen name="menu_height">50dp</dimen>
+    <dimen name="menu_width">500dp</dimen>
+
+    <dimen name="background_height">392dp</dimen>
+    <dimen name="background_width">1101dp</dimen>
+    <dimen name="dial_size">148dp</dimen>
+
+    <dimen name="top_buffer">80dp</dimen>
+    <dimen name="middle_buffer">-6dp</dimen>
+    <dimen name="left_buffer">13dp</dimen>
+    <dimen name="knob_buffer">5dp</dimen>
 </resources>

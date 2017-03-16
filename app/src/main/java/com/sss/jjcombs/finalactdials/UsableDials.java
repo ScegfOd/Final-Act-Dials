@@ -1,117 +1,118 @@
 package com.sss.jjcombs.finalactdials;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 public class UsableDials extends FragmentActivity {
-
-    String[] labels;
+    private static final String[] labels = {"2B", "2", "2A", "C", "1B", "1", "1A"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usable_dials);
 
-
-        int[] drawableIDs = {
-                R.drawable.nob_e,
-                R.drawable.nob_n,
-                R.drawable.nob_ne,
-                R.drawable.nob_nw,
-                R.drawable.nob_s,
-                R.drawable.nob_se,
-                R.drawable.nob_sw,
-                R.drawable.nob_w,
-
-                // bottom dial:
-                R.drawable.nob_ne,
-                R.drawable.nob_n,
-                R.drawable.nob_ne,
-                R.drawable.nob_nw,
-                R.drawable.nob_nw};
-
-
-        BitmapDrawable[] allTheNobs = new BitmapDrawable[drawableIDs.length];
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        int upper = (int) ((float) R.dimen.upper_dial_size * metrics.density);
-        int lower = (int) ((float) R.dimen.lower_dial_size * metrics.density);
-
-
-        int i = 0;
-        for ( ; i < 8; i++){//top 8
-            allTheNobs[i] = drawableBitmapFromResource(getResources(),
-                    drawableIDs[i], upper, upper);
-        }
-        for ( ; i < drawableIDs.length; i++){
-            allTheNobs[i] = drawableBitmapFromResource(getResources(),
-                    drawableIDs[i], lower, lower);
-        }
-
-        Dial.ALL_NOBS = allTheNobs;
-
-
-        int upper_background = R.drawable.upper_back;
-
-        int chosen_color = getIntent().getIntExtra("COLOR", ContextCompat.getColor(this, R.color.colorMagenta));
-        if (ContextCompat.getColor(this, R.color.colorRed) == chosen_color) {
-            upper_background = R.drawable.upper_back_r;
-        } else if (ContextCompat.getColor(this, R.color.colorGreen) == chosen_color){
-            upper_background = R.drawable.upper_back_g;
-        }
-        Dial.U_BACKGROUND = drawableBitmapFromResource(getResources(),
-                upper_background, lower, lower);
-        Dial.L_BACKGROUND = drawableBitmapFromResource(getResources(),
-                R.drawable.lower_back, lower, lower);
-
-        labels = new String[]{
-                getString(R.string.d2b),
-                getString(R.string.d2),
-                getString(R.string.d2a),
-                getString(R.string.dc),
-                getString(R.string.d1b),
-                getString(R.string.d1),
-                getString(R.string.d1a)
-        };
-
-        if (findViewById(R.id.control_panel) != null) {
-
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            for (String label : labels) {
-                Dial aFragment = Dial.newInstance(chosen_color, label);
-                getSupportFragmentManager().beginTransaction()
-                        .add(R.id.control_panel, aFragment, label).commit();
-            }
-
-        }
-
+        //set bottom toggle function
         ToggleButton toggle = (ToggleButton) findViewById(R.id.toggle_switch);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                for (String label : labels) {
-                    ((Dial)getSupportFragmentManager().findFragmentByTag(label)).setButtons(!isChecked);
-                }
+                Dial.setLock(isChecked);
             }
         });
 
+        //resize numbers from display
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        //figure out what fraction of the original image to resize to
+        float screen_height = Math.min(metrics.widthPixels, metrics.heightPixels);
+        float text_size = getResources().getDimension(R.dimen.menu_height);
+        text_size /= metrics.density;
+        text_size *= 2;
+        toggle.setTextOn(String.valueOf(screen_height));
+        float scaling_factor = ((screen_height-text_size)/screen_height);
+        //scaling_factor *= 1.25;//TODO: figure out scaling
+
+
+        //get the scale for images
+        float width = getResources().getDimension(R.dimen.background_width) * scaling_factor;
+        float height = getResources().getDimension(R.dimen.background_height) * scaling_factor;
+        float size = getResources().getDimension(R.dimen.dial_size) * scaling_factor;
+
+        //get alignment for images
+        float top_buffer = getResources().getDimension(R.dimen.top_buffer) * scaling_factor;
+        float middle_buffer = getResources().getDimension(R.dimen.middle_buffer) * scaling_factor;
+        float left_buffer = getResources().getDimension(R.dimen.left_buffer) * scaling_factor;
+        float knob_buffer = getResources().getDimension(R.dimen.knob_buffer) * scaling_factor;
+        findViewById(R.id.both_panels).setPadding(Math.round(left_buffer),0,0,0);
+        findViewById(R.id.control_panel_top).setPadding(
+                0, Math.round(top_buffer), 0, Math.round(middle_buffer));
+
+        //get background color
+        int background_pointer = R.drawable.orange_back;
+        int chosen_color = getIntent().getIntExtra("COLOR", ContextCompat.getColor(this, R.color.colorOrange));
+        if (ContextCompat.getColor(this, R.color.colorGreen) == chosen_color) {
+            background_pointer = R.drawable.green_back;
+        }
+
+        //resize and set background image
+        ImageView panel_back = (ImageView) findViewById(R.id.background);
+        Bitmap background = bitmapFromResource(getResources(), background_pointer,
+                width / metrics.density, height / metrics.density);
+        Bitmap final_background = Bitmap.createScaledBitmap(background,
+                Math.round(width), Math.round(height), false);
+        panel_back.setImageBitmap(final_background);
+
+        //resize and set knob image
+        Bitmap knob = bitmapFromResource(getResources(), R.drawable.knob,
+                size / metrics.density, size / metrics.density);
+        Bitmap final_knob = Bitmap.createScaledBitmap(knob, Math.round(size), Math.round(size), false);
+        Dial.setKnob(final_knob);
+        Dial.setSize(size);
+        Dial.setPadding(knob_buffer);
+
+
+        //add knobs
+        float point_knob_up = 0, point_knob_left = 270;
+        for (String label : labels) {
+            Dial aFragment = Dial.newInstance(point_knob_left);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.control_panel_top, aFragment, label+"_t").commit();
+        }
+
+        for (String label : labels) {
+            Dial aFragment = Dial.newInstance(point_knob_up);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.control_panel_bottom, aFragment, label+"_b").commit();
+        }
     }
-    public static BitmapDrawable drawableBitmapFromResource(Resources res, int resId,
-                                                                 int reqWidth, int reqHeight) {
+
+    @Override
+    public void onPostResume(){
+        super.onPostResume();
+        View decorView = getWindow().getDecorView();
+        // Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+    public static Bitmap bitmapFromResource(Resources res, int resId,
+                                            float reqWidth, float reqHeight) {
+        return bitmapFromResource(res, resId, Math.round(reqWidth), Math.round(reqHeight));
+    }
+
+    public static Bitmap bitmapFromResource(Resources res, int resId,
+                                            int reqWidth, int reqHeight) {
 
         // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
+        BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(res, resId, options);
 
@@ -120,8 +121,11 @@ public class UsableDials extends FragmentActivity {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        return new BitmapDrawable(res, BitmapFactory.decodeResource(res, resId, options));
+        options.outHeight = reqHeight;
+        options.outWidth = reqWidth;
+        return BitmapFactory.decodeResource(res, resId, options);
     }
+
 
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {

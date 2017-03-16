@@ -1,6 +1,0 @@
-<resources>
-    <dimen name="upper_button_size">50dp</dimen>
-    <dimen name="upper_dial_size">150dp</dimen> <!--must be 3x the button size-->
-    <dimen name="lower_button_size">35dp</dimen>
-    <dimen name="lower_dial_size">105dp</dimen> <!--must be 3x the button size-->
-</resources>
