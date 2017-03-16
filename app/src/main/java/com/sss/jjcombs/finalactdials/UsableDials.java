@@ -31,26 +31,22 @@ public class UsableDials extends FragmentActivity {
         //resize numbers from display
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        //figure out what fraction of the original image to resize to
         float screen_height = Math.min(metrics.widthPixels, metrics.heightPixels);
         float text_size = getResources().getDimension(R.dimen.menu_height);
-        text_size /= metrics.density;
-        text_size *= 2;
-        toggle.setTextOn(String.valueOf(screen_height));
-        float scaling_factor = ((screen_height-text_size)/screen_height);
-        //scaling_factor *= 1.25;//TODO: figure out scaling
+        float available_height = screen_height - text_size;
+        float scaling_factor = available_height / getResources().getDimension(R.dimen.background_height);
 
 
         //get the scale for images
-        float width = getResources().getDimension(R.dimen.background_width) * scaling_factor;
-        float height = getResources().getDimension(R.dimen.background_height) * scaling_factor;
-        float size = getResources().getDimension(R.dimen.dial_size) * scaling_factor;
+        float size = getResources().getDimension(R.dimen.dial_size) * scaling_factor,
+              background_width = getResources().getDimension(R.dimen.background_width) * scaling_factor,
+              background_height = getResources().getDimension(R.dimen.background_height) * scaling_factor;
 
         //get alignment for images
-        float top_buffer = getResources().getDimension(R.dimen.top_buffer) * scaling_factor;
-        float middle_buffer = getResources().getDimension(R.dimen.middle_buffer) * scaling_factor;
-        float left_buffer = getResources().getDimension(R.dimen.left_buffer) * scaling_factor;
-        float knob_buffer = getResources().getDimension(R.dimen.knob_buffer) * scaling_factor;
+        float top_buffer = getResources().getDimension(R.dimen.top_buffer) * scaling_factor,
+              middle_buffer = getResources().getDimension(R.dimen.middle_buffer) * scaling_factor,
+              left_buffer = getResources().getDimension(R.dimen.left_buffer) * scaling_factor,
+              knob_buffer = getResources().getDimension(R.dimen.knob_buffer) * scaling_factor;
         findViewById(R.id.both_panels).setPadding(Math.round(left_buffer),0,0,0);
         findViewById(R.id.control_panel_top).setPadding(
                 0, Math.round(top_buffer), 0, Math.round(middle_buffer));
@@ -65,9 +61,9 @@ public class UsableDials extends FragmentActivity {
         //resize and set background image
         ImageView panel_back = (ImageView) findViewById(R.id.background);
         Bitmap background = bitmapFromResource(getResources(), background_pointer,
-                width / metrics.density, height / metrics.density);
+                background_width / metrics.density, background_height / metrics.density);
         Bitmap final_background = Bitmap.createScaledBitmap(background,
-                Math.round(width), Math.round(height), false);
+                Math.round(background_width), Math.round(background_height), false);
         panel_back.setImageBitmap(final_background);
 
         //resize and set knob image
