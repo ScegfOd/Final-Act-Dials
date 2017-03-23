@@ -3,6 +3,7 @@ package com.sss.jjcombs.finalactdials;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,7 +15,7 @@ import android.widget.ImageView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Represents an individual pair of dials on the Final Act dial board.
+ * Represents an individual dial on the Final Act control panel.
  */
 public class Dial extends Fragment {
     private static final String ARG_ANGLE = "angle";
@@ -24,6 +25,7 @@ public class Dial extends Fragment {
     private float mAngle;
     private ImageView mKnob;
     private static Bitmap mDrawable;
+    private View mThisDial;
 
     public Dial() {/* Required empty public constructor*/}
 
@@ -58,8 +60,8 @@ public class Dial extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View thisDial = inflater.inflate(R.layout.fragment_dial, container, false);
-
+        mThisDial = inflater.inflate(R.layout.fragment_dial, container, false);
+        final View thisDial = mThisDial;
         // create knob
         mKnob = (ImageView) (thisDial.findViewById(R.id.knob));
         mKnob.setImageBitmap(mDrawable);
@@ -69,6 +71,7 @@ public class Dial extends Fragment {
         //steal the ACTION_MOVE from the horizontal scroller!
         thisDial.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {hideStatusBar();}
                 if (mDraggable){
                     if (event.getAction() == MotionEvent.ACTION_MOVE){
                         thisDial.getParent().requestDisallowInterceptTouchEvent(true);
@@ -93,7 +96,7 @@ public class Dial extends Fragment {
 
 
 
-        return thisDial;
+        return mThisDial;
     }
 
     public void rotateKnob(float deg) {
@@ -101,6 +104,20 @@ public class Dial extends Fragment {
         mKnob.setScaleType(ImageView.ScaleType.MATRIX);
         matrix.postRotate(deg, mSize/2, mSize/2);
         mKnob.setImageMatrix(matrix);
+    }
+
+    /**hiding the status bar is taken care of with immersive starting with KITKAT
+     * see {@link com.sss.jjcombs.finalactdials.UsableDials#onPostResume()}
+     * for the other part of why this is unnecessary after API 19
+     */
+    private void hideStatusBar(){
+        mThisDial.getRootView().setSystemUiVisibility(
+                  View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LOW_PROFILE);
     }
 
     public static float snapToCorner(float deg){

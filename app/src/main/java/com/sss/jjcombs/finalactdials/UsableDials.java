@@ -1,13 +1,16 @@
 package com.sss.jjcombs.finalactdials;
 
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
@@ -20,11 +23,17 @@ public class UsableDials extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usable_dials);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }
+        this.onPostResume();
+
         //set bottom toggle function
         ToggleButton toggle = (ToggleButton) findViewById(R.id.toggle_switch);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Dial.setLock(isChecked);
+                Dial.setLock(!isChecked);
             }
         });
 
@@ -93,11 +102,19 @@ public class UsableDials extends FragmentActivity {
     @Override
     public void onPostResume(){
         super.onPostResume();
-        View decorView = getWindow().getDecorView();
-        // Hide the status bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        // Hide the things!
+        int uiOptions = View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                | View.SYSTEM_UI_FLAG_FULLSCREEN; // hide status bar
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            uiOptions = uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(uiOptions);
     }
+
 
     public static Bitmap bitmapFromResource(Resources res, int resId,
                                             float reqWidth, float reqHeight) {
