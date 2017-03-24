@@ -1,4 +1,4 @@
-package com.sss.jjcombs.finalactdials;
+package sentientstone.jjcombs.finalactdials;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.sss.jjcombs.finalactdials", appContext.getPackageName());
+        assertEquals("sentientstone.jjcombs.finalactdials", appContext.getPackageName());
     }
 }

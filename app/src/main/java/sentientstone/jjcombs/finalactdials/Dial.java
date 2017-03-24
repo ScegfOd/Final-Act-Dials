@@ -1,4 +1,4 @@
-package com.sss.jjcombs.finalactdials;
+package sentientstone.jjcombs.finalactdials;
 
 
 import android.graphics.Bitmap;
@@ -107,7 +107,7 @@ public class Dial extends Fragment {
     }
 
     /**hiding the status bar is taken care of with immersive starting with KITKAT
-     * see {@link com.sss.jjcombs.finalactdials.UsableDials#onPostResume()}
+     * see {@link sentientstone.jjcombs.finalactdials.UsableDials#onPostResume()}
      * for the other part of why this is unnecessary after API 19
      */
     private void hideStatusBar(){
