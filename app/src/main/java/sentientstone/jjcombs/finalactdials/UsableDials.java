@@ -1,6 +1,7 @@
 package sentientstone.jjcombs.finalactdials;
 
 
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -116,6 +117,11 @@ public class UsableDials extends FragmentActivity {
     }
 
 
+    public void goBack(View view){
+        Intent intent = new Intent(this, Menu.class);
+        startActivity(intent);
+
+    }
     public static Bitmap bitmapFromResource(Resources res, int resId,
                                             float reqWidth, float reqHeight) {
         return bitmapFromResource(res, resId, Math.round(reqWidth), Math.round(reqHeight));

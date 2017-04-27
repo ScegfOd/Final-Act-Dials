@@ -48,13 +48,23 @@
     </HorizontalScrollView>
 
 
-    <ToggleButton
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/menu_height"
-        android:id="@+id/toggle_switch"
-        android:layout_alignParentBottom="true"
-        android:textOff="@string/unlocked"
-        android:textOn="@string/locked"
-        android:layout_gravity="bottom"/>
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="goBack"
+            android:text="@string/back"/>
+        <ToggleButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/toggle_switch"
+            android:textOff="@string/unlocked"
+            android:textOn="@string/locked"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

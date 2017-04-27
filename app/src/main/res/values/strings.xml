@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">Final Act Control Panel</string>
-    <string name="unlocked">Tap this to lock dials</string>
-    <string name="locked">Tap this to unlock dials</string>
+    <string name="unlocked">LOCK DIALS</string>
+    <string name="locked">UNLOCK DIALS</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="green">Alpha Company: DESERT COYOTES</string>
     <string name="red">Delta Company: IRON FIST</string>
+    <string name="back">BACK</string>
 </resources>
